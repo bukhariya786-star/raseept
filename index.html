@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<title>BEC Receipt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Manjari Font -->
+<link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  padding:20px;
+  font-family:'Manjari',sans-serif;
+  background:#f4f6f8;
+  text-align:center;
+}
+
+/* Input Area */
+.control{
+  margin-bottom:20px;
+}
+input{
+  width:240px;
+  padding:12px;
+  font-size:16px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-family:'Manjari';
+}
+button{
+  padding:12px 20px;
+  font-size:16px;
+  border:none;
+  border-radius:8px;
+  background:#0b7d4a;
+  color:#fff;
+  cursor:pointer;
+  font-family:'Manjari';
+}
+
+/* Receipt */
+#receipt{
+  width:800px;
+  height:1130px;
+  margin:auto;
+  background:url('raseept-poster.jpg') no-repeat center;
+  background-size:contain;
+  position:relative;
+  display:none;
+}
+
+/* Amount Box */
+.amount-box{
+  position:absolute;
+  top:120px;
+  left:140px;
+  width:260px;
+  height:48px;
+  border:2px solid #0b3b91;
+  border-radius:30px;
+  display:flex;
+  align-items:center;
+  padding-left:15px;
+  font-size:22px;
+  font-weight:700;
+  background:#fff;
+}
+
+/* Details Box */
+.details-box{
+  position:absolute;
+  top:480px;
+  left:90px;
+  width:620px;
+  height:250px;
+  font-size:15.5px;
+  line-height:1.8;
+  text-align:justify;
+  color:#000;
+}
+
+/* Mobile */
+@media(max-width:850px){
+  #receipt{
+    transform:scale(0.45);
+    transform-origin:top center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="control">
+  <input type="text" id="receiptNo" placeholder="Receipt No (ഉദാ: 2026/001)">
+  <br><br>
+  <button onclick="generatePDF()">📄 Auto PDF Download</button>
+</div>
+
+<!-- Receipt Layout -->
+<div id="receipt">
+  <div class="amount-box">
+    ₹ <span id="amount"></span>
+  </div>
+
+  <div class="details-box" id="details">
+  </div>
+</div>
+
+<script>
+const TSV_URL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vRbGUZhtMFw7xyfMvQ40Cf2R3PAI7oR-dRTBBhmwzHEIJFj__066F0l5f0gmk3jv2-oHgHRnMGVyRqr/pub?gid=58253840&single=true&output=tsv";
+
+function generatePDF(){
+  const rno=document.getElementById("receiptNo").value.trim();
+  if(!rno){
+    alert("Receipt Number നൽകുക");
+    return;
+  }
+
+  fetch(TSV_URL)
+  .then(res=>res.text())
+  .then(data=>{
+    const rows=data.split("\n").map(r=>r.split("\t"));
+    const row=rows.find(r=>r[0]===rno);
+
+    if(!row){
+      alert("Receipt കണ്ടെത്താനായില്ല");
+      return;
+    }
+
+    document.getElementById("amount").innerText=row[3];
+
+    document.getElementById("details").innerHTML=
+    `ബോവിക്കാനം, മുതലപ്പാറയിൽ പ്രവർത്തിക്കുന്ന 
+    <b>ബുഖാരിയ എജുക്കേഷണൽ സെന്ററിലേക്ക്</b> 
+    നിങ്ങൾ നൽകിയ ഈ പിന്തുണക്ക് ഹൃദയത്തിന്റെ 
+    അകത്തട്ടിൽ നിന്നുള്ള പ്രതിജ്ഞത അറിയിക്കുന്നു.
+    <br><br>
+    നിങ്ങളുടെ ഈ സംഭാവന നാഥൻ സ്വീകരിക്കുമാറാകട്ടെ.
+    നമ്മുടെ മാതാപിതാക്കളോട് ഒന്നിച്ചു 
+    സ്വർഗ്ഗത്തിൽ ഒരു ഇരിപ്പിടം 
+    റബ്ബ് നൽകട്ടെ.
+    <br><br>
+    <b>ആമീൻ…</b>`;
+
+    document.getElementById("receipt").style.display="block";
+
+    html2pdf().set({
+      margin:0,
+      filename:`Receipt_${rno}.pdf`,
+      image:{type:'jpeg',quality:1},
+      html2canvas:{scale:2},
+      jsPDF:{unit:'px',format:[800,1130]}
+    }).from(document.getElementById("receipt")).save();
+  });
+}
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ml">
+<head>
+<meta charset="UTF-8">
+<title>BEC Receipt</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Manjari Font -->
+<link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+body{
+  margin:0;
+  padding:20px;
+  font-family:'Manjari',sans-serif;
+  background:#f4f6f8;
+  text-align:center;
+}
+
+/* Input Area */
+.control{
+  margin-bottom:20px;
+}
+input{
+  width:240px;
+  padding:12px;
+  font-size:16px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-family:'Manjari';
+}
+button{
+  padding:12px 20px;
+  font-size:16px;
+  border:none;
+  border-radius:8px;
+  background:#0b7d4a;
+  color:#fff;
+  cursor:pointer;
+  font-family:'Manjari';
+}
+
+/* Receipt */
+#receipt{
+  width:800px;
+  height:1130px;
+  margin:auto;
+  background:url('raseept-poster.jpg') no-repeat center;
+  background-size:contain;
+  position:relative;
+  display:none;
+}
+
+/* Amount Box */
+.amount-box{
+  position:absolute;
+  top:120px;
+  left:140px;
+  width:260px;
+  height:48px;
+  border:2px solid #0b3b91;
+  border-radius:30px;
+  display:flex;
+  align-items:center;
+  padding-left:15px;
+  font-size:22px;
+  font-weight:700;
+  background:#fff;
+}
+
+/* Details Box */
+.details-box{
+  position:absolute;
+  top:480px;
+  left:90px;
+  width:620px;
+  height:250px;
+  font-size:15.5px;
+  line-height:1.8;
+  text-align:justify;
+  color:#000;
+}
+
+/* Mobile */
+@media(max-width:850px){
+  #receipt{
+    transform:scale(0.45);
+    transform-origin:top center;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="control">
+  <input type="text" id="receiptNo" placeholder="Receipt No (ഉദാ: 2026/001)">
+  <br><br>
+  <button onclick="generatePDF()">📄 Auto PDF Download</button>
+</div>
+
+<!-- Receipt Layout -->
+<div id="receipt">
+  <div class="amount-box">
+    ₹ <span id="amount"></span>
+  </div>
+
+  <div class="details-box" id="details">
+  </div>
+</div>
+
+<script>
+const TSV_URL =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vRbGUZhtMFw7xyfMvQ40Cf2R3PAI7oR-dRTBBhmwzHEIJFj__066F0l5f0gmk3jv2-oHgHRnMGVyRqr/pub?gid=58253840&single=true&output=tsv";
+
+function generatePDF(){
+  const rno=document.getElementById("receiptNo").value.trim();
+  if(!rno){
+    alert("Receipt Number നൽകുക");
+    return;
+  }
+
+  fetch(TSV_URL)
+  .then(res=>res.text())
+  .then(data=>{
+    const rows=data.split("\n").map(r=>r.split("\t"));
+    const row=rows.find(r=>r[0]===rno);
+
+    if(!row){
+      alert("Receipt കണ്ടെത്താനായില്ല");
+      return;
+    }
+
+    document.getElementById("amount").innerText=row[3];
+
+    document.getElementById("details").innerHTML=
+    `ബോവിക്കാനം, മുതലപ്പാറയിൽ പ്രവർത്തിക്കുന്ന 
+    <b>ബുഖാരിയ എജുക്കേഷണൽ സെന്ററിലേക്ക്</b> 
+    നിങ്ങൾ നൽകിയ ഈ പിന്തുണക്ക്  കൃതജ്ഞത അറിയിക്കുന്നു.
+    <br><br>
+    നിങ്ങളുടെ ഈ സംഭാവന നാഥൻ സ്വീകരിക്കുമാറാകട്ടെ.
+    നമ്മുടെ മാതാപിതാക്കളോട് ഒന്നിച്ചു 
+    സ്വർഗ്ഗത്തിൽ ഒരു ഇരിപ്പിടം 
+    റബ്ബ് നൽകട്ടെ.
+    <br><br>
+    <b>ആമീൻ…</b>`;
+
+    document.getElementById("receipt").style.display="block";
+
+    html2pdf().set({
+      margin:0,
+      filename:`Receipt_${rno}.pdf`,
+      image:{type:'jpeg',quality:1},
+      html2canvas:{scale:2},
+      jsPDF:{unit:'px',format:[800,1130]}
+    }).from(document.getElementById("receipt")).save();
+  });
+}
+</script>
+
+</body>
+</html>
